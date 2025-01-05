@@ -1,38 +1,29 @@
-pipelineJob('SeedJobs/Lastmile_Consumer_Service_SeedJob') {
+// Creating folders for Lastmile Consumer Service jobs
+folder('CI/Lastmile_Consumer_Service') {
+    description('Folder for Lastmile Consumer Service CI jobs.')
+}
+
+// Example pipeline job for Lastmile Consumer Service
+pipelineJob('CI/Lastmile_Consumer_Service/Lastmile_Consumer_Service_Extensive_CI_Pipeline') {
     logRotator {
-        numToKeep(5)  // Keep the last 5 builds for this seed job
+        numToKeep(4)  // Keep the last 4 builds
     }
-
+    parameters {
+        booleanParam('enable_jira', true, 'Support flag for build')
+        stringParam('jira_ticket_id', '', 'The Jira issue key to update')
+    }
     definition {
-        cps {
-            script("""
-pipeline {
-    agent any
-    stages {
-        stage('Checkout Repository') {
-            steps {
-                git url: 'https://scm.ecomexpress.in/scm/las/lastmile2.0.git',
-                    branch: 'opstree',
-                    credentialsId: 'ayush_bitbucket_original'
-            }
-        }
-        stage('Generate Jobs') {
-            steps {
-                jobDsl targets: 'lastmile-consumer-service/*.groovy'
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url('https://scm.ecomexpress.in/scm/las/lastmile2.0.git')
+                        credentials('ayush_bitbucket_original')
+                    }
+                    branch('opstree')
+                    scriptPath('lastmile-consumer-service/Jenkinsfile_extensive')
+                }
             }
         }
     }
-    post {
-        success {
-            echo 'Lastmile Consumer Service jobs successfully created.'
-        }
-        failure {
-            echo 'Failed to create jobs for Lastmile Consumer Service.'
-        }
-    }
 }
-            """.stripIndent())
-        }
-    }
-}
-
