@@ -1,38 +1,20 @@
-pipelineJob('SeedJobs/Sathi_Service_SeedJob') {
-    logRotator {
-        numToKeep(5)  // Keep the last 5 builds for this seed job
-    }
+folder('CI/Sathi/Ecom_Sathi_Service') {
+    description('Folder for Ecom Sathi Service CI jobs.')
+}
 
+pipelineJob('CI/Sathi/Ecom_Sathi_Service/Minimalist_CI_Pipeline') {
     definition {
-        cps {
-            script("""
-pipeline {
-    agent any
-    stages {
-        stage('Checkout Repository') {
-            steps {
-                git url: 'https://scm.ecomexpress.in/scm/las/lastmile2.0.git',
-                    branch: 'opstree',
-                    credentialsId: 'ayush_bitbucket_original'
-            }
-        }
-        stage('Generate Jobs') {
-            steps {
-                jobDsl targets: 'sathi-service/*.groovy'
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url('https://scm.ecomexpress.in/scm/las/lastmile2.0.git')
+                        credentials('ayush_bitbucket_original')
+                    }
+                    branch('opstree')
+                    scriptPath('ecom-sathi-service/Jenkinsfile_minimalist')
+                }
             }
         }
     }
-    post {
-        success {
-            echo 'Sathi Service jobs successfully created.'
-        }
-        failure {
-            echo 'Failed to create jobs for Sathi Service.'
-        }
-    }
 }
-            """.stripIndent())
-        }
-    }
-}
-
