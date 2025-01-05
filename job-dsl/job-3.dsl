@@ -1,4 +1,4 @@
-pipelineJob('SeedJobs/Lastmile_Consumer_Service_SeedJob') {
+pipelineJob('SeedJobs/Sathi_Service_SeedJob') {
     logRotator {
         numToKeep(5)  // Keep the last 5 builds for this seed job
     }
@@ -18,16 +18,16 @@ pipeline {
         }
         stage('Generate Jobs') {
             steps {
-                jobDsl targets: 'lastmile-consumer-service/*.groovy'
+                jobDsl targets: 'sathi-service/*.groovy'
             }
         }
     }
     post {
         success {
-            echo 'Lastmile Consumer Service jobs successfully created.'
+            echo 'Sathi Service jobs successfully created.'
         }
         failure {
-            echo 'Failed to create jobs for Lastmile Consumer Service.'
+            echo 'Failed to create jobs for Sathi Service.'
         }
     }
 }
