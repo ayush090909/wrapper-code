@@ -10,7 +10,7 @@ pipeline {
         stage('Run DSL Scripts') {
             steps {
                 // Use the Job DSL plugin to process all Groovy scripts in the directory
-                jobDsl targets: 'seedjobs/**/**/*.dsl, ignoreExisting: true
+                jobDsl targets: 'seedjobs/**/**/*.dsl', ignoreExisting: true
             }
         }
     }
