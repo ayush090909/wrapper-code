@@ -1,3 +1,22 @@
+def folderNames = ['CI/AYUSH']
+def createFolderRecursively(parent, folderName) {
+    def folderParts = folderName.tokenize('/')
+    def currentPath = ''
+    
+    folderParts.each { part ->
+        currentPath = currentPath ? "${currentPath}/${part}" : part
+        folder(currentPath) {
+            // Additional configurations for the folder can be added here if needed
+        }
+    }
+}
+
+// Create folders
+folderNames.each { folderName ->
+    createFolderRecursively('', folderName)
+}
+
+
 ///////////////////////////////////////////Lastmile_Instruction////////////////////////////////////////////////////////////////////////
 
 multibranchPipelineJob('CI/AYUSH/ayush_Instruction_Service_Minimalist_CI_Pipeline') {
